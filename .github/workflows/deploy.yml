@@ -27,4 +27,4 @@ jobs:
 
       - name: Sync S3 Bucket
         run: |
-          aws s3 sync . s3://korean-word-game --exclude ".git/*" --delete
+          aws s3 sync . s3://bitcoin-simple-information --exclude ".git/*" --delete
