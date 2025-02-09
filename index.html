@@ -25,8 +25,8 @@
             </div>
             <div class="cell">
                 <h2>현재 거래소 보유량</h2>
-                <div class="cell-value">2.1M BTC</div>
-                <div class="cell-change">어제 대비 +0.5%</div>
+                <div class="cell-value" id="exchangeHoldings">2.1M BTC</div>
+                <!-- <div class="cell-change">어제 대비 +0.5%</div> -->
             </div>
             <div class="cell">
                 <h2>거래량</h2>
@@ -36,27 +36,70 @@
             <div class="cell">
                 <h2>1사토시 기준 원화 가격</h2>
                 <div class="cell-value" id="satoshiPrice">>-</div>
-                <div class="cell-change">어제 대비 +0.8%</div>
+                <div class="cell-change" id="satoshiChange">어제 대비 -%</div>
             </div>
             <div class="cell">
                 <h2>1년 이상 보유자 비율</h2>
-                <div class="cell-value">65%</div>
-                <div class="cell-change">어제 대비 +0.2%</div>
+                <div class="cell-value" id="holder1y">-</div>
+                <div class="cell-change">실시간 업데이트</div>
             </div>
+            
             <div class="cell">
                 <h2>3년 이상 보유자 비율</h2>
-                <div class="cell-value">45%</div>
-                <div class="cell-change">어제 대비 +0.1%</div>
+                <div class="cell-value" id="holder3y">-</div>
+                <div class="cell-change">실시간 업데이트</div>
             </div>
+            
             <div class="cell">
                 <h2>5년 이상 보유자 비율</h2>
-                <div class="cell-value">30%</div>
-                <div class="cell-change">어제 대비 +0.05%</div>
+                <div class="cell-value" id="holder5y">-</div>
+                <div class="cell-change">실시간 업데이트</div>
             </div>
+            
             <div class="cell">
                 <h2>10년 이상 보유자 비율</h2>
-                <div class="cell-value">15%</div>
-                <div class="cell-change">어제 대비 0.0%</div>
+                <div class="cell-value" id="holder10y">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>비트코인 해쉬레이트</h2>
+                <div class="cell-value" id="hashrate">-EH/s</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>비트코인 최신 트랙잰션 수수료</h2>
+                <div class="cell-value" id="latestFee">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <!-- <div class="cell">
+                <h2>비트코인 일반 전송 수수료</h2>
+                <div class="cell-value" id="normalFee">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>비트코인 빠른 전송 수수료</h2>
+                <div class="cell-value" id="fastestFee">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>비트코인 느린 전송 수수료</h2>
+                <div class="cell-value" id="slowestFee">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div> -->
+            <div class="cell">
+                <h2>반감기까지 남은 블록</h2>
+                <div class="cell-value" id="halvingBlocks">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>반감기까지 예상 남은 시간</h2>
+                <div class="cell-value" id="halvingTime">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>지난 반감기로부터 경과 시간</h2>
+                <div class="cell-value" id="halvingElapsed">-</div>
+                <div class="cell-change">실시간 업데이트</div>
             </div>
         </div>
     </main>
