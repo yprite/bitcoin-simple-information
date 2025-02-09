@@ -59,6 +59,9 @@ async function updateKimchiPremium() {
         const btcKrwEquivalent = btcUsdPrice * exchangeRate;
         const premium = ((btcKrwPrice.current - btcKrwEquivalent) / btcKrwEquivalent) * 100;
         document.getElementById("kimchiPremium").textContent = premium.toFixed(2) + "%";
+
+        // 값이 갱신될 때 반짝이게 만들기
+        flashUpdateEffect("kimchiPremium");
     } catch (error) {
         console.error("김치 프리미엄 계산 중 오류 발생:", error);
         document.getElementById("kimchiPremium").textContent = "데이터 오류";
@@ -76,6 +79,10 @@ async function updateSatoshiPrice() {
 
         document.getElementById("satoshiPrice").textContent = satoshiPrice.toFixed(6) + " KRW";
         document.getElementById("satoshiChange").textContent = `어제 대비 ${changePercentage.toFixed(2)}%`;
+
+        // 값이 갱신될 때 반짝이게 만들기
+        flashUpdateEffect("satoshiPrice");
+        flashUpdateEffect("satoshiChange");
     } catch (error) {
         console.error("1사토시 가격 계산 중 오류 발생:", error);
         document.getElementById("satoshiPrice").textContent = "데이터 오류";
@@ -146,6 +153,8 @@ async function fetchBitcoinHashrate() {
         const hashrate = data.hash_rate; // 해쉬레이트 값 (TH/s 단위)
 
         document.getElementById("hashrate").textContent = `${hashrate.toFixed(2)} EH/s`;
+        // 값이 갱신될 때 반짝이게 만들기
+        flashUpdateEffect("hashrate");
     } catch (error) {
         console.error("비트코인 해쉬레이트 데이터를 불러오는 중 오류 발생:", error);
         document.getElementById("hashrate").textContent = "데이터 오류";
@@ -163,6 +172,8 @@ async function fetchBitcoinLastFee() {
         const avgFeeSatPerVByte = avgFeeSat / 250; // 일반적인 트랜잭션 크기 250 vB 기준
 
         document.getElementById("latestFee").textContent = `${avgFeeSatPerVByte.toFixed(2)} sat/vB`;
+        // 값이 갱신될 때 반짝이게 만들기
+        flashUpdateEffect("latestFee");
     } catch (error) {
         console.error("비트코인 수수료 데이터를 불러오는 중 오류 발생:", error);
         document.getElementById("latestFee").textContent = "데이터 오류";
@@ -331,22 +342,21 @@ async function fetchBitcoinHolder10y() {
 async function updateAllData() {
     await updateKimchiPremium();
     await updateSatoshiPrice();
-    await fetchExchangeHoldings();
     await fetchBitcoinHashrate();
     await fetchBitcoinLastFee();
-
     await fetchBitcoinHalvingRemainingBlocks();
     await fetchBitcoinHalvingRemainingTime();
     await fetchBitcoinHalvingElapsedTime();
 
     
     // API 키 필요
-    await fetchBitcoinHolder1y()
-    await fetchBitcoinHolder3y()
-    await fetchBitcoinHolder5y()
-    await fetchBitcoinHolder10y()
+    // await fetchBitcoinHolder1y()
+    // await fetchBitcoinHolder3y()
+    // await fetchBitcoinHolder5y()
+    // await fetchBitcoinHolder10y()
 
     // 미구현
+    // await fetchExchangeHoldings();
     // await fetchBitcoinNomralFee();
 
 }
