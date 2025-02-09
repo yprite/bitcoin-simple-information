@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비트코인 인사이트</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>
+            <img src="https://bitcoin.org/img/icons/opengraph.png" alt="비트코인 심볼">
+            비트코인 인사이트
+        </h1>
+        <p>2025년 2월 기준</p>
+    </header>
+    <main>
+        <div class="container" id="sortableContainer">
+            <div class="cell">
+                <h2>김치 프리미엄</h2>
+                <div class="cell-value" id="kimchiPremium">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>현재 거래소 보유량</h2>
+                <div class="cell-value" id="exchangeHoldings">2.1M BTC</div>
+                <!-- <div class="cell-change">어제 대비 +0.5%</div> -->
+            </div>
+            <div class="cell">
+                <h2>거래량</h2>
+                <div class="cell-value">$12.5B</div>
+                <div class="cell-change">어제 대비 -1.2%</div>
+            </div>
+            <div class="cell">
+                <h2>1사토시 기준 원화 가격</h2>
+                <div class="cell-value" id="satoshiPrice">>-</div>
+                <div class="cell-change" id="satoshiChange">어제 대비 -%</div>
+            </div>
+            <div class="cell">
+                <h2>1년 이상 보유자 비율</h2>
+                <div class="cell-value" id="holder1y">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            
+            <div class="cell">
+                <h2>3년 이상 보유자 비율</h2>
+                <div class="cell-value" id="holder3y">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            
+            <div class="cell">
+                <h2>5년 이상 보유자 비율</h2>
+                <div class="cell-value" id="holder5y">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            
+            <div class="cell">
+                <h2>10년 이상 보유자 비율</h2>
+                <div class="cell-value" id="holder10y">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>비트코인 해쉬레이트</h2>
+                <div class="cell-value" id="hashrate">-EH/s</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>비트코인 최신 트랙잰션 수수료</h2>
+                <div class="cell-value" id="latestFee">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <!-- <div class="cell">
+                <h2>비트코인 일반 전송 수수료</h2>
+                <div class="cell-value" id="normalFee">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>비트코인 빠른 전송 수수료</h2>
+                <div class="cell-value" id="fastestFee">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>비트코인 느린 전송 수수료</h2>
+                <div class="cell-value" id="slowestFee">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div> -->
+            <div class="cell">
+                <h2>반감기까지 남은 블록</h2>
+                <div class="cell-value" id="halvingBlocks">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>반감기까지 예상 남은 시간</h2>
+                <div class="cell-value" id="halvingTime">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>지난 반감기로부터 경과 시간</h2>
+                <div class="cell-value" id="halvingElapsed">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
