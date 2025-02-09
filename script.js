@@ -9,6 +9,23 @@ function flashUpdateEffect(elementId) {
     }, 500); // 0.5초 후 효과 제거
 }
 
+
+//-----  Util func -----
+// 숫자를 한국 원화 스타일로 변환하는 함수
+function formatKoreanWon(amount) {
+    if (amount >= 1_0000_0000) {
+        return `${(amount / 1_0000_0000).toFixed(2)}억 원`;
+    } else if (amount >= 1_0000_000) {
+        return `${(amount / 1_0000_000).toFixed(2)}천만 원`;
+    } else if (amount >= 1_0000_00) {
+        return `${(amount / 1_0000_00).toFixed(2)}백만 원`;
+    } else if (amount >= 1_0000) {
+        return `${(amount / 1_0000).toFixed(2)}만 원`;
+    } else {
+        return `${amount.toLocaleString()} 원`;
+    }
+}
+
 //-----  Retrieve data for bitcoin -----
 async function fetchExchangeRate() {
     try {
@@ -48,6 +65,33 @@ async function fetchBinanceBTCPrice() {
     }
 }
 
+async function updateUpbitPrice() {
+    const priceData = await fetchUpbitBTCPrice();
+    const priceElement = document.getElementById("upbitBtcPrice");
+    const changeElement = document.getElementById("upbitBtcChange");
+
+    const currentPrice = priceData.current;
+    const previousPrice = priceData.previous;
+
+    if (previousPrice > 0) {
+        const priceChange = currentPrice - previousPrice;
+        const priceChangePercent = (priceChange / previousPrice) * 100;
+
+        // 변동률 UI 적용 (색상 포함)
+        changeElement.textContent = `어제 대비 ${priceChangePercent.toFixed(2)}%`;
+        changeElement.style.color = priceChange >= 0 ? "lightgreen" : "red";
+    } else {
+        changeElement.textContent = "변화 없음";
+    }
+
+    // 가격을 한국 원화(KRW) 스타일로 변환하여 표시
+    priceElement.textContent = formatKoreanWon(currentPrice);
+
+    // 값이 갱신될 때 반짝이게 만들기
+    flashUpdateEffect("upbitBtcPrice");
+    flashUpdateEffect("upbitBtcChange");
+}
+
 async function updateKimchiPremium() {
     try {
         const exchangeRate = await fetchExchangeRate();
@@ -68,7 +112,7 @@ async function updateKimchiPremium() {
     }
 }
 
-async function updateSatoshiPrice() {
+async function updateSatoshiPriceByUpbit() {
     try {
         const btcKrwPrice = await fetchUpbitBTCPrice();
         if (btcKrwPrice.current === 0 || btcKrwPrice.previous === 0) throw new Error("데이터 없음");
@@ -339,15 +383,128 @@ async function fetchBitcoinHolder10y() {
     flashUpdateEffect("holder10y");
 }
 
+async function fetchBitcoinMarketCap() {
+    try {
+        const response = await fetch("https://api.coingecko.com/api/v3/coins/bitcoin");
+        if (!response.ok) throw new Error("CoinGecko API 오류");
+
+        const data = await response.json();
+        const marketCapUsd = data.market_data.market_cap.usd; // 시가총액 (USD 단위)
+
+        document.getElementById("marketCap").textContent = `$${marketCapUsd.toLocaleString()} USD`;
+
+        // 값이 갱신될 때 반짝이게 만들기
+        flashUpdateEffect("marketCap");
+
+    } catch (error) {
+        console.error("비트코인 시가총액 데이터를 불러오는 중 오류 발생:", error);
+        document.getElementById("marketCap").textContent = "데이터 오류";
+    }
+}
+
+async function fetchBitcoinMarketCapKRW() {
+    try {
+        const response = await fetch("https://api.coingecko.com/api/v3/coins/bitcoin");
+        if (!response.ok) throw new Error("CoinGecko API 오류");
+
+        const data = await response.json();
+        const marketCapKrw = data.market_data.market_cap.krw; // 원화 시가총액
+
+        // 숫자를 "조", "억", "천만", "백만", "십만", "만원" 단위로 변환하는 함수
+        function formatKoreanCurrency(amount) {
+            if (amount >= 1_0000_0000_0000) {
+                return `${(amount / 1_0000_0000_0000).toFixed(2)}조 원`;
+            } else if (amount >= 1_0000_0000) {
+                return `${(amount / 1_0000_0000).toFixed(2)}억 원`;
+            } else if (amount >= 1_0000_0000) {
+                return `${(amount / 1_0000_0000).toFixed(2)}천만 원`;
+            } else if (amount >= 1_0000_000) {
+                return `${(amount / 1_0000_000).toFixed(2)}백만 원`;
+            } else if (amount >= 1_0000_00) {
+                return `${(amount / 1_0000_00).toFixed(2)}십만 원`;
+            } else if (amount >= 1_0000) {
+                return `${(amount / 1_0000).toFixed(2)}만 원`;
+            } else {
+                return `${amount.toLocaleString()} 원`;
+            }
+        }
+
+        // 변환된 값 적용
+        document.getElementById("marketCap").textContent = formatKoreanCurrency(marketCapKrw);
+
+        // 값이 갱신될 때 반짝이게 만들기
+        flashUpdateEffect("marketCap");
+
+    } catch (error) {
+        console.error("비트코인 시가총액 데이터를 불러오는 중 오류 발생:", error);
+        document.getElementById("marketCap").textContent = "데이터 오류";
+    }
+}
+
+async function fetchBitcoinDominance() {
+    try {
+        const response = await fetch("https://api.coingecko.com/api/v3/global");
+        if (!response.ok) throw new Error("CoinGecko API 오류");
+
+        const data = await response.json();
+        const btcDominance = data.data.market_cap_percentage.btc; // 비트코인 도미넌스 (%)
+
+        document.getElementById("btcDominance").textContent = `${btcDominance.toFixed(2)}%`;
+
+        // 값이 갱신될 때 반짝이게 만들기
+        flashUpdateEffect("btcDominance");
+
+    } catch (error) {
+        console.error("비트코인 도미넌스 데이터를 불러오는 중 오류 발생:", error);
+        document.getElementById("btcDominance").textContent = "데이터 오류";
+    }
+}
+
+async function fetchBitcoinPriceChange(metric, elementId) {
+    try {
+        const response = await fetch("https://api.coingecko.com/api/v3/coins/bitcoin");
+        if (!response.ok) throw new Error("CoinGecko API 오류");
+
+        const data = await response.json();
+        const change = data.market_data[metric].usd;
+
+        document.getElementById(elementId).textContent = `${change.toFixed(2)}%`;
+
+        // 값이 갱신될 때 반짝이게 만들기
+        flashUpdateEffect(elementId);
+
+    } catch (error) {
+        console.error(`비트코인 ${elementId} 데이터 불러오는 중 오류 발생:`, error);
+        document.getElementById(elementId).textContent = "데이터 오류";
+    }
+}
+
+async function fetchBitcoinPriceChange1h() {
+    await fetchBitcoinPriceChange("price_change_percentage_1h_in_currency", "priceChange1h");
+}
+
+async function fetchBitcoinPriceChange24h() {
+    await fetchBitcoinPriceChange("price_change_percentage_24h_in_currency", "priceChange24h");
+}
+
+async function fetchBitcoinPriceChange7d() {
+    await fetchBitcoinPriceChange("price_change_percentage_7d_in_currency", "priceChange7d");
+}
+
 async function updateAllData() {
+    await updateUpbitPrice();
     await updateKimchiPremium();
-    await updateSatoshiPrice();
+    await updateSatoshiPriceByUpbit();
     await fetchBitcoinHashrate();
     await fetchBitcoinLastFee();
     await fetchBitcoinHalvingRemainingBlocks();
     await fetchBitcoinHalvingRemainingTime();
     await fetchBitcoinHalvingElapsedTime();
-
+    await fetchBitcoinMarketCap();
+    await fetchBitcoinDominance();
+    await fetchBitcoinPriceChange1h();
+    await fetchBitcoinPriceChange24h();
+    await fetchBitcoinPriceChange7d();
     
     // API 키 필요
     // await fetchBitcoinHolder1y()
