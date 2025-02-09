@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비트코인 인사이트</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>
+            <img src="https://bitcoin.org/img/icons/opengraph.png" alt="비트코인 심볼">
+            비트코인 인사이트
+        </h1>
+        <p>2025년 2월 기준</p>
+    </header>
+    <main>
+        <div class="container" id="sortableContainer">
+            <div class="cell">
+                <h2>김치 프리미엄</h2>
+                <div class="cell-value" id="kimchiPremium">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>현재 거래소 보유량</h2>
+                <div class="cell-value">2.1M BTC</div>
+                <div class="cell-change">어제 대비 +0.5%</div>
+            </div>
+            <div class="cell">
+                <h2>거래량</h2>
+                <div class="cell-value">$12.5B</div>
+                <div class="cell-change">어제 대비 -1.2%</div>
+            </div>
+            <div class="cell">
+                <h2>1사토시 기준 원화 가격</h2>
+                <div class="cell-value" id="satoshiPrice">>-</div>
+                <div class="cell-change">어제 대비 +0.8%</div>
+            </div>
+            <div class="cell">
+                <h2>1년 이상 보유자 비율</h2>
+                <div class="cell-value">65%</div>
+                <div class="cell-change">어제 대비 +0.2%</div>
+            </div>
+            <div class="cell">
+                <h2>3년 이상 보유자 비율</h2>
+                <div class="cell-value">45%</div>
+                <div class="cell-change">어제 대비 +0.1%</div>
+            </div>
+            <div class="cell">
+                <h2>5년 이상 보유자 비율</h2>
+                <div class="cell-value">30%</div>
+                <div class="cell-change">어제 대비 +0.05%</div>
+            </div>
+            <div class="cell">
+                <h2>10년 이상 보유자 비율</h2>
+                <div class="cell-value">15%</div>
+                <div class="cell-change">어제 대비 0.0%</div>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
