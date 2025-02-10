@@ -68,6 +68,25 @@ async function fetchUpbitBTCPrice() {
     }
 }
 
+async function fetchUpbitBTCPriceByCors() {
+    try {
+        const proxyUrl = "https://green-darkness-2c94.yprite.workers.dev/?url=";
+        const upbitUrl = "https://api.upbit.com/v1/ticker?markets=KRW-BTC";
+
+        const response = await fetch(proxyUrl + encodeURIComponent(upbitUrl));
+        if (!response.ok) throw new Error("Upbit API 오류");
+
+        const data = await response.json();
+        return {
+            current: data[0]?.trade_price || 0,
+            previous: data[0]?.prev_closing_price || 0
+        };
+    } catch (error) {
+        console.error("Upbit BTC 데이터를 불러오는 중 오류 발생:", error);
+        return { current: 0, previous: 0 };
+    }
+}
+
 async function fetchBinanceBTCPrice() {
     try {
         const response = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
@@ -81,7 +100,7 @@ async function fetchBinanceBTCPrice() {
 }
 
 async function updateUpbitPrice() {
-    const priceData = await fetchUpbitBTCPrice();
+    const priceData = await fetchUpbitBTCPriceByCors();
     const priceElement = document.getElementById("upbitBtcPrice");
     const changeElement = document.getElementById("upbitBtcChange");
 
@@ -110,9 +129,9 @@ async function updateUpbitPrice() {
 async function updateKimchiPremium() {
     try {
         const exchangeRate = await fetchExchangeRate();
-        const btcKrwPrice = await fetchUpbitBTCPrice();
+        const btcKrwPrice = await fetchUpbitBTCPriceByCors();
         const btcUsdPrice = await fetchBinanceBTCPrice();
-        
+
         if (btcKrwPrice.current === 0 || btcUsdPrice === 0) throw new Error("데이터 없음");
 
         const btcKrwEquivalent = btcUsdPrice * exchangeRate;
@@ -130,7 +149,7 @@ async function updateKimchiPremium() {
 // 1사토시 기준 가격 업데이트
 async function updateSatoshiPriceByUpbit() {
     try {
-        const btcKrwPrice = await fetchUpbitBTCPrice();
+        const btcKrwPrice = await fetchUpbitBTCPriceByCors();
         if (btcKrwPrice.current === 0 || btcKrwPrice.previous === 0) throw new Error("데이터 없음");
 
         const satoshiPrice = btcKrwPrice.current / 100000000;
@@ -157,32 +176,32 @@ const exchangeAddresses = [
     "bc1q4h9h6z2qg9vg3ffn8ks3yphuupc53kxjqykv9w",
     //Coinbase
     "3D2oetdNuZUqQHPJmcMDDHYoqkyNVsFk9r",
-	"3KZ526Nx7AwRAr8fH5EHK2RCHJXMWtwVsT",
+    "3KZ526Nx7AwRAr8fH5EHK2RCHJXMWtwVsT",
     //Kraken
     "3QW5V3zyyHWeW9G7wFT6nAdY1htqGtQXBo",
-	"bc1qg92e9zfq7vyeu2ujm0c89d07kx2drnyc50cdm9",
+    "bc1qg92e9zfq7vyeu2ujm0c89d07kx2drnyc50cdm9",
     // Bitfinex (비트파이넥스)
-	"3Cbq7aT1tY8kMxWLbitaG7yT6bPbKChq64",
-	"bc1ql0ejh5crd05hs5ewfs8yftw6s6z5dzjgwmt29f",
+    "3Cbq7aT1tY8kMxWLbitaG7yT6bPbKChq64",
+    "bc1ql0ejh5crd05hs5ewfs8yftw6s6z5dzjgwmt29f",
     // Bittrex (비트트렉스)
-	"3Nxwenay9Z8Lc9JBiywExpnEFiLp6Afp8v",
-	"bc1qv4s2c9gz7skjj8p5xxt8n6es8ymkx83wg4m4x9",
-	"Bittrex 온체인 데이터 조회 (BTCScan)",
+    "3Nxwenay9Z8Lc9JBiywExpnEFiLp6Afp8v",
+    "bc1qv4s2c9gz7skjj8p5xxt8n6es8ymkx83wg4m4x9",
+    "Bittrex 온체인 데이터 조회 (BTCScan)",
     // OKX (구 OKEx)
-	"3G98wRVB4Z2MMXXGmmVTH7GC72XHJGPeuE",
-	"bc1q66sk67nnt6s3rt5y6cq8pr9mk7hfppjdtlq6m5",
+    "3G98wRVB4Z2MMXXGmmVTH7GC72XHJGPeuE",
+    "bc1q66sk67nnt6s3rt5y6cq8pr9mk7hfppjdtlq6m5",
     // Huobi (후오비)
-	"1KFHE7w8BhaENAswwryaoccDb6qcT6DbYY",
-	"bc1qnx4f3gcfavsv8sr0v4wll43p9au3tmdnyhr03x",
+    "1KFHE7w8BhaENAswwryaoccDb6qcT6DbYY",
+    "bc1qnx4f3gcfavsv8sr0v4wll43p9au3tmdnyhr03x",
     // Upbit (업비트)
-	"1PuDg7drPGEHh8qyoXzK5NvixuMVhS4BEB",
-	"bc1q9dx84hl8v9px7u4tj2umahj23mhyc5dhpt0ua7",
+    "1PuDg7drPGEHh8qyoXzK5NvixuMVhS4BEB",
+    "bc1q9dx84hl8v9px7u4tj2umahj23mhyc5dhpt0ua7",
     // Bithumb (빗썸)
-	"1HB5XMLmzFVj8ALj6mfBsbifRoD4miY36v",
-	"bc1q62mrwljksl92s6n6fj2e37zflgwjswv6t9tny4",
+    "1HB5XMLmzFVj8ALj6mfBsbifRoD4miY36v",
+    "bc1q62mrwljksl92s6n6fj2e37zflgwjswv6t9tny4",
     // KuCoin (쿠코인)
-	"3Cbq7aT1tY8kMxWLbitaG7yT6bPbKChq64",
-	"bc1q62mrwljksl92s6n6fj2e37zflgwjswv6t9tny4",
+    "3Cbq7aT1tY8kMxWLbitaG7yT6bPbKChq64",
+    "bc1q62mrwljksl92s6n6fj2e37zflgwjswv6t9tny4",
 ];
 
 async function fetchExchangeHoldings() {
@@ -193,7 +212,7 @@ async function fetchExchangeHoldings() {
             const response = await fetch(`https://blockchain.info/q/addressbalance/${address}`);
             if (!response.ok) throw new Error(`API 오류: ${address}`);
             const balance = await response.json();
-            
+
             totalBalance += balance / 100000000; // 사토시 단위를 BTC로 변환
         }
 
@@ -208,7 +227,7 @@ async function fetchBitcoinHashrate() {
     try {
         const response = await fetch("https://api.blockchain.info/stats");
         if (!response.ok) throw new Error("Blockchain API 오류");
-        
+
         const data = await response.json();
         const hashrate = data.hash_rate; // 해쉬레이트 값 (TH/s 단위)
 
@@ -225,7 +244,7 @@ async function fetchBitcoinLastFee() {
     try {
         const response = await fetch("https://api.blockchain.info/stats");
         if (!response.ok) throw new Error("Blockchain API 오류");
-        
+
         const data = await response.json();
         const avgFeeBtc = data.trade_volume_btc / data.n_tx; // 평균 트랜잭션 수수료 (BTC 단위)
         const avgFeeSat = avgFeeBtc * 1e8; // BTC → Satoshi 변환
@@ -245,7 +264,7 @@ async function fetchBitcoinNomralFee() {
     try {
         const response = await fetch("https://mempool.space/api/v1/fees/recommended");
         if (!response.ok) throw new Error("Mempool API 오류");
-        
+
         const data = await response.json();
         const normalFee = data.halfHourFee; // 일반 전송 수수료 (sat/vB 단위)
 
@@ -301,7 +320,7 @@ async function fetchBitcoinHalvingRemainingTime() {
     try {
         const response = await fetch("https://blockchain.info/q/getblockcount");
         if (!response.ok) throw new Error("Blockchain API 오류");
-        
+
         const currentBlock = await response.json();
         const nextHalvingBlock = 1050000; // 다음 반감기 블록
         const remainingBlocks = nextHalvingBlock - currentBlock; // 남은 블록 수
@@ -334,7 +353,7 @@ async function fetchBitcoinHalvingElapsedTime() {
     try {
         const response = await fetch("https://blockchain.info/q/getblockcount");
         if (!response.ok) throw new Error("Blockchain API 오류");
-        
+
         const currentBlock = await response.json();
         const lastHalvingBlock = 840000; // 마지막 반감기 블록
         const elapsedBlocks = currentBlock - lastHalvingBlock; // 지난 블록 수
@@ -366,7 +385,7 @@ async function fetchGlassnodeData(metric) {
     try {
         const response = await fetch(`https://api.glassnode.com/v1/metrics/supply/${metric}?api_key=${GLASSNODE_API_KEY}`);
         if (!response.ok) throw new Error(`Glassnode API 오류 - ${metric}`);
-        
+
         const data = await response.json();
         return data.length > 0 ? data[data.length - 1].value : 0; // 최신 데이터 반환
     } catch (error) {
@@ -656,7 +675,7 @@ async function fetchKoreaBitcoinNodes() {
 
 async function updateAllData() {
     console.log("🔄 전체 데이터 초기 로드 실행");
-    
+
     // 모든 데이터를 한 번 업데이트
     await update10sGroup();
     await update30sGroup();
@@ -682,9 +701,9 @@ async function update1mGroup() {
     await fetchBitcoinMarketCapKRW();
     await fetchBitcoinDominance();
 }
-async function update2mGroup() {}
+async function update2mGroup() { }
 
-async function update5mGroup() {   
+async function update5mGroup() {
     await fetchBitcoinPriceChange1h();
     await fetchBitcoinPriceChange24h();
     await fetchBitcoinPriceChange7d();
