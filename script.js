@@ -1,4 +1,4 @@
-//-----  Visual Effect -----
+// ===== Visual Effects =====
 function flashUpdateEffect(elementId) {
     const element = document.getElementById(elementId);
     if (!element) return;
@@ -10,8 +10,8 @@ function flashUpdateEffect(elementId) {
 }
 
 
-//-----  Util func -----
-// 숫자를 한국 원화 스타일로 변환하는 함수
+// ===== Utility Functions =====
+// 한국 원화(KRW) 스타일 변환
 function formatKoreanWon(amount) {
     if (amount >= 1_0000_0000) {
         return `${(amount / 1_0000_0000).toFixed(2)}억 원`;
@@ -26,18 +26,33 @@ function formatKoreanWon(amount) {
     }
 }
 
-//-----  Retrieve data for bitcoin -----
+// 공통 API 요청 함수
+async function fetchAPI(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`API 오류: ${url}`);
+        return await response.json();
+    } catch (error) {
+        console.error(`API 요청 실패: ${url}`, error);
+        return null;
+    }
+}
+
+
+
+// ===== 개별 데이터 업데이트 함수 =====
 async function fetchExchangeRate() {
     try {
         const response = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
         const data = await response.json();
-        return data.rates.KRW || 1300;
+        return data.rates.KRW || 1400;
     } catch (error) {
         console.error("환율 데이터를 불러오는 중 오류 발생:", error);
-        return 1300;
+        return 1400;
     }
 }
 
+// 업비트 비트코인 가격 업데이트
 async function fetchUpbitBTCPrice() {
     try {
         const response = await fetch("https://api.upbit.com/v1/ticker?markets=KRW-BTC");
@@ -112,6 +127,7 @@ async function updateKimchiPremium() {
     }
 }
 
+// 1사토시 기준 가격 업데이트
 async function updateSatoshiPriceByUpbit() {
     try {
         const btcKrwPrice = await fetchUpbitBTCPrice();
@@ -639,37 +655,78 @@ async function fetchKoreaBitcoinNodes() {
 
 
 async function updateAllData() {
-    // await updateUpbitPrice();
-    // await updateKimchiPremium();
-    // await updateSatoshiPriceByUpbit();
-    // await fetchBitcoinHashrate();
-    // await fetchBitcoinLastFee();
-    // await fetchBitcoinHalvingRemainingBlocks();
-    // await fetchBitcoinHalvingRemainingTime();
-    // await fetchBitcoinHalvingElapsedTime();
-    // await fetchBitcoinMarketCap();
-    // await fetchBitcoinDominance();
-    // await fetchBitcoinPriceChange1h();
-    // await fetchBitcoinPriceChange24h();
-    // await fetchBitcoinPriceChange7d();
+    console.log("🔄 전체 데이터 초기 로드 실행");
+    
+    // 모든 데이터를 한 번 업데이트
+    await update10sGroup();
+    await update30sGroup();
+    await update1mGroup();
+    await update2mGroup();
+    await update5mGroup();
+    await update10mGroup();
+
+    // 이후 그룹별 주기로 개별 업데이트 실행
+    startIntervalGroups();
+}
+
+// ===== 그룹별 업데이트 함수 =====
+async function update10sGroup() {
+    await updateUpbitPrice();
+    await updateSatoshiPriceByUpbit();
+}
+async function update30sGroup() {
+    await updateKimchiPremium();
+}
+
+async function update1mGroup() {
+    await fetchBitcoinMarketCapKRW();
+    await fetchBitcoinDominance();
+}
+async function update2mGroup() {}
+
+async function update5mGroup() {   
+    await fetchBitcoinPriceChange1h();
+    await fetchBitcoinPriceChange24h();
+    await fetchBitcoinPriceChange7d();
+
+    // API 과도한 사용으로 429 에러 발생
     // await fetchBitcoinNodesCount();
-    await updateBitcoinNodesChart();
-    await fetchKoreaBitcoinNodes();
+    // await updateBitcoinNodesChart();
+    // await fetchKoreaBitcoinNodes();
+}
+async function update10mGroup() {
+    await fetchBitcoinHashrate();
+    await fetchBitcoinLastFee();
+    await fetchBitcoinHalvingRemainingBlocks();
+    await fetchBitcoinHalvingRemainingTime();
+    await fetchBitcoinHalvingElapsedTime();
 
     // API 키 필요
     // await fetchBitcoinHolder1y()
     // await fetchBitcoinHolder3y()
     // await fetchBitcoinHolder5y()
     // await fetchBitcoinHolder10y()
+}
 
+async function update30mGroup() {
     // 미구현
     // await fetchExchangeHoldings();
     // await fetchBitcoinNomralFee();
+}
 
+// ===== 그룹별 주기 설정 =====
+function startIntervalGroups() {
+    console.log("✅ 그룹별 데이터 업데이트 시작");
+
+    setInterval(update10sGroup, 10000);  // 10초 그룹
+    setInterval(update30sGroup, 30000);  // 30초 그룹
+    setInterval(update1mGroup, 60000);   // 1분 그룹
+    setInterval(update2mGroup, 120000);  // 2분 그룹
+    setInterval(update5mGroup, 300000);  // 5분 그룹
+    setInterval(update10mGroup, 600000); // 10분 그룹
 }
 
 updateAllData();
-setInterval(updateAllData, 30000);
 
 new Sortable(document.getElementById('sortableContainer'), {
     animation: 150,
