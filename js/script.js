@@ -1,30 +1,6 @@
-// ===== Visual Effects =====
-function flashUpdateEffect(elementId) {
-    const element = document.getElementById(elementId);
-    if (!element) return;
+import { formatKoreanWon } from "./utils.js"
+import { flashUpdateEffect } from "./utils.js"
 
-    element.classList.add("flash-effect");
-    setTimeout(() => {
-        element.classList.remove("flash-effect");
-    }, 500); // 0.5초 후 효과 제거
-}
-
-
-// ===== Utility Functions =====
-// 한국 원화(KRW) 스타일 변환
-function formatKoreanWon(amount) {
-    if (amount >= 1_0000_0000) {
-        return `${(amount / 1_0000_0000).toFixed(2)}억 원`;
-    } else if (amount >= 1_0000_000) {
-        return `${(amount / 1_0000_000).toFixed(2)}천만 원`;
-    } else if (amount >= 1_0000_00) {
-        return `${(amount / 1_0000_00).toFixed(2)}백만 원`;
-    } else if (amount >= 1_0000) {
-        return `${(amount / 1_0000).toFixed(2)}만 원`;
-    } else {
-        return `${amount.toLocaleString()} 원`;
-    }
-}
 
 // 공통 API 요청 함수
 async function fetchAPI(url) {
@@ -37,8 +13,6 @@ async function fetchAPI(url) {
         return null;
     }
 }
-
-
 
 // ===== 개별 데이터 업데이트 함수 =====
 async function fetchExchangeRate() {
@@ -725,6 +699,8 @@ function startIntervalGroups() {
     setInterval(update5mGroup, 300000);  // 5분 그룹
     setInterval(update10mGroup, 600000); // 10분 그룹
 }
+
+console.log("ADSFASFSDAF");
 
 updateAllData();
 
