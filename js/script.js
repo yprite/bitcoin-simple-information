@@ -1,6 +1,6 @@
 import { updateAllData } from "./intervals.js"
 
-updateAllData();
+// updateAllData();
 
 new Sortable(document.getElementById('sortableContainer'), {
     animation: 150,
