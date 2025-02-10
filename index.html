@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>비트코인 인사이트</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -130,6 +131,35 @@
             <div class="cell">
                 <h2>비트코인 7일 변동률</h2>
                 <div class="cell-value" id="priceChange7d">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>비트코인 활성 노드 수</h2>
+                <div class="cell-value" id="bitcoinNodes">-</div>
+                <div class="cell-change">실시간 업데이트</div>
+            </div>
+            <div class="cell">
+                <h2>국가별 비트코인 노드 분포</h2>
+                <table id="bitcoinNodesByCountry">
+                    <thead>
+                        <tr>
+                            <th>순위</th>
+                            <th>국가</th>
+                            <th>노드 개수</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bitcoinNodesByCountryBody">
+                        <tr><td colspan="3">로딩 중...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="cell">
+                <h2>국가별 비트코인 노드 차트</h2>
+                <canvas id="bitcoinNodesChart"></canvas>
+            </div> -->
+            <div class="cell">
+                <h2>한국 비트코인 노드 수</h2>
+                <div class="cell-value" id="koreaBitcoinNodes">-</div>
                 <div class="cell-change">실시간 업데이트</div>
             </div>
         </div>
