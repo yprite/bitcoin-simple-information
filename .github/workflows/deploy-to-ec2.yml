@@ -40,18 +40,18 @@ jobs:
       run: |
         # 기존 폴더 제거 및 새 프로젝트 폴더 생성
         ssh ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} '
-          if [ -d ~/WhiskyWitty ]; then
-            sudo rm -rf ~/WhiskyWitty
+          if [ -d ~/bitcoin-simple-information ]; then
+            sudo rm -rf ~/bitcoin-simple-information
           fi
-          mkdir -p ~/WhiskyWitty
+          mkdir -p ~/bitcoin-simple-information
         '
         
         # 코드 전송
-        scp -r ./* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:~/WhiskyWitty/
+        scp -r ./* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:~/bitcoin-simple-information/
         
         # 도커 컨테이너 실행
         ssh ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} '
-          cd ~/WhiskyWitty
+          cd ~/bitcoin-simple-information
           sudo docker-compose down
           sudo docker-compose up --build -d
         '
