@@ -1,8 +1,7 @@
-name: Deploy to S3 on Release
+name: Manual to S3
 
 on:
-  release:
-    types: [published]  # Only trigger deployment when a new release is published
+  workflow_dispatch:
 
 jobs:
   deploy:
