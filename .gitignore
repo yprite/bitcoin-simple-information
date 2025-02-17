@@ -399,3 +399,5 @@ FodyWeavers.xsd
 
 
 node_moduels/*
+coverage/*
+.DS_Store
