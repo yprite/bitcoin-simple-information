@@ -1,10 +1,16 @@
-FROM httpd:2.4
+FROM node:18
 
-# headers 모듈 활성화
-RUN sed -i 's/#LoadModule headers_module/LoadModule headers_module/' /usr/local/apache2/conf/httpd.conf
+WORKDIR /app
 
-# 기본 Apache 설정 파일 복사
-COPY ./apache-config/httpd.conf /usr/local/apache2/conf/httpd.conf
+# 앱 의존성 설치
+COPY package*.json ./
+RUN npm install
 
-# 웹사이트 파일들을 Apache의 기본 문서 루트로 복사
-COPY . /usr/local/apache2/htdocs/ 
+# 앱 소스 복사
+COPY . .
+
+# 포트 설정
+EXPOSE 3000
+
+# 앱 실행
+CMD ["node", "server.js"] 
