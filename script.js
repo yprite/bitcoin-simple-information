@@ -113,9 +113,11 @@ async function updateUpbitPrice() {
 
         // 변동률 UI 적용 (색상 포함)
         changeElement.textContent = `어제 대비 ${priceChangePercent.toFixed(2)}%`;
+        // 양수일 때 lightgreen, 음수일 때 red로 설정
         changeElement.style.color = priceChange >= 0 ? "lightgreen" : "red";
     } else {
         changeElement.textContent = "변화 없음";
+        changeElement.style.color = "inherit"; // 기본 색상으로 복원
     }
 
     // 가격을 한국 원화(KRW) 스타일로 변환하여 표시
@@ -156,8 +158,15 @@ async function updateSatoshiPriceByUpbit() {
         const satoshiPricePrevious = btcKrwPrice.previous / 100000000;
         const changePercentage = ((satoshiPrice - satoshiPricePrevious) / satoshiPricePrevious) * 100;
 
-        document.getElementById("satoshiPrice").textContent = satoshiPrice.toFixed(6) + " KRW";
-        document.getElementById("satoshiChange").textContent = `어제 대비 ${changePercentage.toFixed(2)}%`;
+        const priceElement = document.getElementById("satoshiPrice");
+        const changeElement = document.getElementById("satoshiChange");
+
+        priceElement.textContent = satoshiPrice.toFixed(6) + " KRW";
+        changeElement.textContent = `어제 대비 ${changePercentage.toFixed(2)}%`;
+        
+        // 변동률에 따른 색상 적용
+        const priceChange = satoshiPrice - satoshiPricePrevious;
+        changeElement.style.color = priceChange >= 0 ? "lightgreen" : "red";
 
         // 값이 갱신될 때 반짝이게 만들기
         flashUpdateEffect("satoshiPrice");
@@ -502,8 +511,11 @@ async function fetchBitcoinPriceChange(metric, elementId) {
 
         const data = await response.json();
         const change = data.market_data[metric].usd;
+        const element = document.getElementById(elementId);
 
-        document.getElementById(elementId).textContent = `${change.toFixed(2)}%`;
+        element.textContent = `${change.toFixed(2)}%`;
+        // 변동률에 따른 색상 적용
+        element.style.color = change >= 0 ? "lightgreen" : "red";
 
         // 값이 갱신될 때 반짝이게 만들기
         flashUpdateEffect(elementId);
