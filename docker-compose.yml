@@ -3,10 +3,10 @@ services:
   web:
     build: .
     ports:
-      - "10081:3000"
+      - "10020:3000"
     volumes:
       - .:/app
       - /app/node_modules
     environment:
       - NODE_ENV=production
-    restart: always 
+    restart: always
