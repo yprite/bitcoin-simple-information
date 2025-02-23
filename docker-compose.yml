@@ -3,7 +3,10 @@ services:
   web:
     build: .
     ports:
-      - "10020:80"
+      - "10020:3000"
     volumes:
-      - ./:/usr/local/apache2/htdocs/
-    restart: always 
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+    restart: always

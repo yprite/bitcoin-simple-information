@@ -41,9 +41,10 @@ async function fetchAPI(url) {
 
 
 // ===== 개별 데이터 업데이트 함수 =====
+// 환율 정보 가져오기
 async function fetchExchangeRate() {
     try {
-        const response = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+        const response = await fetch("/api/exchange-rate");
         const data = await response.json();
         return data.rates.KRW || 1400;
     } catch (error) {
@@ -52,10 +53,10 @@ async function fetchExchangeRate() {
     }
 }
 
-// 업비트 비트코인 가격 업데이트
+// Upbit 비트코인 가격 정보
 async function fetchUpbitBTCPrice() {
     try {
-        const response = await fetch("https://api.upbit.com/v1/ticker?markets=KRW-BTC");
+        const response = await fetch("/api/upbit/btc");
         if (!response.ok) throw new Error("Upbit API 오류");
         const data = await response.json();
         return {
@@ -65,6 +66,39 @@ async function fetchUpbitBTCPrice() {
     } catch (error) {
         console.error("Upbit BTC 데이터를 불러오는 중 오류 발생:", error);
         return { current: 0, previous: 0 };
+    }
+}
+
+// Binance 비트코인 가격 정보
+async function fetchBinanceBTCPrice() {
+    try {
+        const response = await fetch("/api/binance/btc");
+        if (!response.ok) throw new Error("Binance API 오류");
+        const data = await response.json();
+        return parseFloat(data.price) || 0;
+    } catch (error) {
+        console.error("Binance BTC 데이터를 불러오는 중 오류 발생:", error);
+        return 0;
+    }
+}
+
+// 비트코인 가격 변동률 정보
+async function fetchBitcoinPriceChange(metric, elementId) {
+    try {
+        const response = await fetch("/api/bitcoin/price-changes");
+        if (!response.ok) throw new Error("CoinGecko API 오류");
+
+        const data = await response.json();
+        const change = data.market_data[metric].usd;
+        const element = document.getElementById(elementId);
+
+        element.textContent = `${change.toFixed(2)}%`;
+        element.style.color = change >= 0 ? "lightgreen" : "red";
+
+        flashUpdateEffect(elementId);
+    } catch (error) {
+        console.error(`비트코인 ${elementId} 데이터 불러오는 중 오류 발생:`, error);
+        document.getElementById(elementId).textContent = "데이터 오류";
     }
 }
 
@@ -84,18 +118,6 @@ async function fetchUpbitBTCPriceByCors() {
     } catch (error) {
         console.error("Upbit BTC 데이터를 불러오는 중 오류 발생:", error);
         return { current: 0, previous: 0 };
-    }
-}
-
-async function fetchBinanceBTCPrice() {
-    try {
-        const response = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
-        if (!response.ok) throw new Error("Binance API 오류");
-        const data = await response.json();
-        return parseFloat(data.price) || 0;
-    } catch (error) {
-        console.error("Binance BTC 데이터를 불러오는 중 오류 발생:", error);
-        return 0;
     }
 }
 
@@ -501,28 +523,6 @@ async function fetchBitcoinDominance() {
     } catch (error) {
         console.error("비트코인 도미넌스 데이터를 불러오는 중 오류 발생:", error);
         document.getElementById("btcDominance").textContent = "데이터 오류";
-    }
-}
-
-async function fetchBitcoinPriceChange(metric, elementId) {
-    try {
-        const response = await fetch("https://api.coingecko.com/api/v3/coins/bitcoin");
-        if (!response.ok) throw new Error("CoinGecko API 오류");
-
-        const data = await response.json();
-        const change = data.market_data[metric].usd;
-        const element = document.getElementById(elementId);
-
-        element.textContent = `${change.toFixed(2)}%`;
-        // 변동률에 따른 색상 적용
-        element.style.color = change >= 0 ? "lightgreen" : "red";
-
-        // 값이 갱신될 때 반짝이게 만들기
-        flashUpdateEffect(elementId);
-
-    } catch (error) {
-        console.error(`비트코인 ${elementId} 데이터 불러오는 중 오류 발생:`, error);
-        document.getElementById(elementId).textContent = "데이터 오류";
     }
 }
 
