@@ -80,3 +80,16 @@ header p {
     50% { background-color: rgba(255, 255, 255, 0.5); }
     100% { background-color: rgba(255, 255, 255, 0.2); }
 }
+
+.visitor-counter {
+    font-size: 0.9em;
+    color: #666;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.visitor-counter span {
+    display: inline-block;
+}

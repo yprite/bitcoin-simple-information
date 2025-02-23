@@ -8,6 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script
+      async
+      src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"
+    ></script>
 </head>
 <body>
     <header>
@@ -15,6 +19,10 @@
             <img src="https://bitcoin.org/img/icons/opengraph.png" alt="비트코인 심볼">
             비트코인 인사이트
         </h1>
+        <div class="visitor-counter" style="position: absolute; right: 20px; top: 20px;">
+            <span>일일 방문자: <span id="dailyVisitors">0</span></span>
+            <span style="margin-left: 10px;">월간 방문자: <span id="monthlyVisitors">0</span></span>
+        </div>
         <!-- <p>2025년 2월 기준</p> -->
     </header>
     <main>
