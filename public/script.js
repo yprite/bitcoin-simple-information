@@ -9,6 +9,14 @@ function flashUpdateEffect(elementId) {
     }, 500); // 0.5초 후 효과 제거
 }
 
+function updateVisitorCount() {
+    console.log("🔄 방문자 수 업데이트 실행");
+    $.get('/visitor-count', function (data) {
+        console.log("🔄 방문자 수 업데이트 완료");
+        console.log(data);
+        $('#visitorCount').text(data.count);
+    });
+}
 
 // ===== Utility Functions =====
 // 한국 원화(KRW) 스타일 변환
@@ -185,7 +193,7 @@ async function updateSatoshiPriceByUpbit() {
 
         priceElement.textContent = satoshiPrice.toFixed(6) + " KRW";
         changeElement.textContent = `어제 대비 ${changePercentage.toFixed(2)}%`;
-        
+
         // 변동률에 따른 색상 적용
         const priceChange = satoshiPrice - satoshiPricePrevious;
         changeElement.style.color = priceChange >= 0 ? "lightgreen" : "red";
@@ -513,9 +521,25 @@ async function fetchBitcoinDominance() {
         if (!response.ok) throw new Error("CoinGecko API 오류");
 
         const data = await response.json();
+
         const btcDominance = data.data.market_cap_percentage.btc; // 비트코인 도미넌스 (%)
+        const btcDominanceChange = data.data.market_cap_change_percentage_24h_usd;
+        console.log(btcDominanceChange);
 
         document.getElementById("btcDominance").textContent = `${btcDominance.toFixed(2)}%`;
+
+        const changeElement = document.getElementById("btcDominanceChange");
+
+        if (btcDominanceChange != 0) {
+
+            // 변동률 UI 적용 (색상 포함)
+            changeElement.textContent = `어제 대비 ${btcDominanceChange.toFixed(2)}%`;
+            // 양수일 때 lightgreen, 음수일 때 red로 설정
+            changeElement.style.color = btcDominanceChange >= 0 ? "lightgreen" : "red";
+        } else {
+            changeElement.textContent = "변화 없음";
+            changeElement.style.color = "inherit"; // 기본 색상으로 복원
+        }
 
         // 값이 갱신될 때 반짝이게 만들기
         flashUpdateEffect("btcDominance");
@@ -726,6 +750,7 @@ async function updateVisitorCount() {
 // 기존 updateAllData 함수 수정
 async function updateAllData() {
     console.log("🔄 전체 데이터 초기 로드 실행");
+    updateVisitorCount();
 
     // 방문자 수 업데이트 추가
     await updateVisitorCount();
