@@ -6,6 +6,8 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
+let visitorCount = 0;
+
 // 미들웨어 설정
 app.use(cors());
 app.use(express.json());
@@ -15,6 +17,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} [${req.method}] ${req.url}`);
     next();
+});
+
+
+// 방문자 카운트 미들웨어
+app.use((req, res, next) => {
+    visitorCount++;
+    next();
+});
+
+// 방문자 수를 반환하는 엔드포인트
+app.get('/visitor-count', (req, res) => {
+    res.json({ count: visitorCount });
 });
 
 // API 라우트

@@ -9,6 +9,14 @@ function flashUpdateEffect(elementId) {
     }, 500); // 0.5초 후 효과 제거
 }
 
+function updateVisitorCount() {
+    console.log("🔄 방문자 수 업데이트 실행");
+    $.get('/visitor-count', function (data) {
+        console.log("🔄 방문자 수 업데이트 완료");
+        console.log(data);
+        $('#visitorCount').text(data.count);
+    });
+}
 
 // ===== Utility Functions =====
 // 한국 원화(KRW) 스타일 변환
@@ -185,7 +193,7 @@ async function updateSatoshiPriceByUpbit() {
 
         priceElement.textContent = satoshiPrice.toFixed(6) + " KRW";
         changeElement.textContent = `어제 대비 ${changePercentage.toFixed(2)}%`;
-        
+
         // 변동률에 따른 색상 적용
         const priceChange = satoshiPrice - satoshiPricePrevious;
         changeElement.style.color = priceChange >= 0 ? "lightgreen" : "red";
@@ -523,7 +531,7 @@ async function fetchBitcoinDominance() {
         const changeElement = document.getElementById("btcDominanceChange");
 
         if (btcDominanceChange != 0) {
-                
+
             // 변동률 UI 적용 (색상 포함)
             changeElement.textContent = `어제 대비 ${btcDominanceChange.toFixed(2)}%`;
             // 양수일 때 lightgreen, 음수일 때 red로 설정
@@ -703,6 +711,7 @@ async function fetchKoreaBitcoinNodes() {
 
 async function updateAllData() {
     console.log("🔄 전체 데이터 초기 로드 실행");
+    updateVisitorCount();
 
     // 모든 데이터를 한 번 업데이트
     await update10sGroup();
