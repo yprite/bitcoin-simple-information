@@ -513,9 +513,25 @@ async function fetchBitcoinDominance() {
         if (!response.ok) throw new Error("CoinGecko API 오류");
 
         const data = await response.json();
+
         const btcDominance = data.data.market_cap_percentage.btc; // 비트코인 도미넌스 (%)
+        const btcDominanceChange = data.data.market_cap_change_percentage_24h_usd;
+        console.log(btcDominanceChange);
 
         document.getElementById("btcDominance").textContent = `${btcDominance.toFixed(2)}%`;
+
+        const changeElement = document.getElementById("btcDominanceChange");
+
+        if (btcDominanceChange != 0) {
+                
+            // 변동률 UI 적용 (색상 포함)
+            changeElement.textContent = `어제 대비 ${btcDominanceChange.toFixed(2)}%`;
+            // 양수일 때 lightgreen, 음수일 때 red로 설정
+            changeElement.style.color = btcDominanceChange >= 0 ? "lightgreen" : "red";
+        } else {
+            changeElement.textContent = "변화 없음";
+            changeElement.style.color = "inherit"; // 기본 색상으로 복원
+        }
 
         // 값이 갱신될 때 반짝이게 만들기
         flashUpdateEffect("btcDominance");
