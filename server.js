@@ -2,6 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const path = require('path');
+const Database = require('better-sqlite3');
 
 const app = express();
 const port = 3000;
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} [${req.method}] ${req.url}`);
     next();
 });
+
 
 
 // 방문자 카운트 미들웨어
@@ -87,4 +89,13 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
     console.log(`서버가 포트 ${port}에서 실행 중입니다.`);
     console.log(`정적 파일 경로: ${path.join(__dirname, 'public')}`);
+});
+
+// 서버 종료 시 데이터베이스 연결 닫기
+process.on('SIGINT', () => {
+    if (db) {
+        db.close();
+        console.log('데이터베이스 연결 종료');
+    }
+    process.exit(0);
 }); 

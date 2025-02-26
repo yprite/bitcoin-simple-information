@@ -708,12 +708,54 @@ async function fetchKoreaBitcoinNodes() {
     }
 }
 
+// 방문자 식별자 생성 함수
+async function getVisitorId() {
+    try {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        return result.visitorId;
+    } catch (error) {
+        console.error('방문자 ID 생성 중 오류:', error);
+        return null;
+    }
+}
 
+// 방문자 수 업데이트 함수 수정
+async function updateVisitorCount() {
+    try {
+        const visitorId = await getVisitorId();
+        if (!visitorId) {
+            throw new Error('방문자 ID를 생성할 수 없습니다');
+        }
+
+        // 방문자 수 증가 요청
+        const response = await fetch('/api/visitors', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ visitorId })
+        });
+        
+        const data = await response.json();
+        
+        // UI 업데이트
+        document.getElementById('dailyVisitors').textContent = data.daily.toLocaleString();
+        document.getElementById('monthlyVisitors').textContent = data.monthly.toLocaleString();
+    } catch (error) {
+        console.error('방문자 수 업데이트 중 오류 발생:', error);
+    }
+}
+
+// 기존 updateAllData 함수 수정
 async function updateAllData() {
     console.log("🔄 전체 데이터 초기 로드 실행");
     updateVisitorCount();
 
-    // 모든 데이터를 한 번 업데이트
+    // 방문자 수 업데이트 추가
+    await updateVisitorCount();
+
+    // 기존 업데이트 로직
     await update10sGroup();
     await update30sGroup();
     await update1mGroup();
@@ -721,7 +763,6 @@ async function updateAllData() {
     await update5mGroup();
     await update10mGroup();
 
-    // 이후 그룹별 주기로 개별 업데이트 실행
     startIntervalGroups();
 }
 
